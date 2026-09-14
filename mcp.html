@@ -72,6 +72,7 @@ pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:1
 pre .k{color:var(--code-key)} pre .s{color:var(--code-str)} pre .d{color:var(--code-dim)}
 pre .req{color:var(--code-key);font-weight:600} pre .res{color:var(--code-str);font-weight:600}
 table{border-collapse:collapse;width:100%;font-size:14px;margin:18px 0;line-height:1.6}
+table.std{table-layout:fixed}table.std td{word-break:keep-all;overflow-wrap:anywhere}table.std code{white-space:normal}table.std .chip{white-space:normal;display:inline-block;line-height:1.35}
 th{font-size:12.5px;letter-spacing:.05em;color:var(--ink3);text-align:left;font-weight:600;
   border-bottom:2px solid var(--line);padding:8px 10px}
 td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top}
@@ -95,7 +96,7 @@ td code,p code,li code{font:600 12.5px "IBM Plex Mono",monospace;background:var(
 .talk p{margin:11px 0}
 .talk .who{font:600 11.5px "IBM Plex Mono",monospace;color:var(--ink3);letter-spacing:.06em;margin-right:8px}
 .talk .ai .who{color:var(--accent)}
-@media (max-width:620px){ nav.toc ol{columns:1} .stats{grid-template-columns:1fr} h1{font-size:28px} }
+@media (max-width:620px){ nav.toc ol{columns:1} .stats{grid-template-columns:1fr} h1{font-size:28px} table.std{min-width:680px} }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 </style>
 
@@ -109,7 +110,7 @@ td code,p code,li code{font:600 12.5px "IBM Plex Mono",monospace;background:var(
   어떻게 돌아가며 어떻게 전국으로 번지는지를 끝까지 따라가는 문서.
   이용자의 말 한마디부터 다른 도시의 도입 체크리스트까지 — 챗봇은 답을 주고 실행은 이용자가 하지만,
   이 설계의 에이전트는 판정하고 신청까지 <b>대신 한다</b>.</p>
-  <div class="meta">2026. 9. 11. 개정(참조 서버 v0.3 기준 · 08절 표준 접점 10행 · 초판 2026. 8. 28.) · 부천시립도서관 상호대차 AI 에이전트 프로젝트 · 내부 검토용 시안</div>
+  <div class="meta">2026. 9. 14. 개정(참조 서버 v0.3 기준 · 08절 표준 접점 10행 · 초판 2026. 8. 28.) · 부천시립도서관 상호대차 AI 에이전트 프로젝트 · 내부 검토용 시안</div>
 </header>
 
 <nav class="toc" aria-label="차례">
@@ -596,13 +597,13 @@ notify: [<span class="s">sms</span>, <span class="s">voice_call</span>]         
 <p>책이지는 독자 규격을 만들지 않습니다. 도구 계층은 MCP 위에, 그 밖의 층은 이미 있거나 지금 만들어지고 있는 표준 위에 올립니다.
 아래는 설계가 접하는 표준과 그 접점입니다 — 각 행의 상태는 2026년 9월 기준이며, 「설계」는 이 문서의 약속, 「시연」은 시연 웹에 넣은 것입니다.</p>
 
-<div class="tblwrap"><table>
+<div class="tblwrap"><table class="std"><colgroup><col style="width:17%"><col style="width:25%"><col style="width:41%"><col style="width:17%"></colgroup>
 <tr><th>표준·기반</th><th>무엇인가 (쉽게)</th><th>책이지와의 접점</th><th>상태</th></tr>
 <tr><td><b>MCP</b></td><td>AI가 도구를 부르는 공통 규격</td><td>도구 10종 참조 서버 v0.3. 2026. 8. A2A와 함께 하나의 재단(Agentic AI Foundation) 아래로</td><td><span class="chip done">구현</span></td></tr>
 <tr><td><b>WebMCP</b> (navigator.modelContext)</td><td>웹페이지가 자기 기능을 브라우저 안의 AI에게 도구로 내놓는 규격 — 크롬 오리진 트라이얼(2026)</td><td>시연 웹이 지원 브라우저에서 <code>search_item</code>·<code>check_availability</code>·<code>request_service</code> 3종을 등록. 신청 도구는 <code>consequentialHint</code>로 표시하고 이용자 확인 없이는 거부. 도서관 누리집이 이 규격을 쓰면 <b>별도 앱 없이 브라우저 AI가 상호대차를 대신</b>할 수 있다</td><td><span class="chip part">시연(지원 브라우저)</span></td></tr>
 <tr><td><b>A2A</b> (Agent2Agent, v1.0)</td><td>기관이 다른 AI 에이전트끼리 대화하는 규격 — 150여 기관 참여</td><td>도서관 간 상호대차의 다음 형태: 부천의 에이전트가 타 도서관의 에이전트에게 「이 책, 며칠 안에 보내줄 수 있나」를 묻고 조건을 맞춘다. 3단계(규격 이관)에서 검토</td><td><span class="chip plan">설계</span></td></tr>
 <tr><td><b>ISO 18626:2021</b></td><td>도서관 간 상호대차 메시지의 국제 표준(요청·공급관 응답·요청관 응답, XML 웹서비스)</td><td><code>request_service</code>·<code>track_request</code>·<code>cancel_request</code>의 상태 전이를 ISO 18626 메시지에 대응시켜, 커넥터가 표준 메시지를 만들면 시스템 간 호환. 책바다(전국) 연계의 기준 규격 후보</td><td><span class="chip plan">설계</span></td></tr>
-<tr><td><b>패스키(WebAuthn)</b></td><td>비밀번호 대신 기기의 지문·얼굴로 확인 — 정부24·은행 앱 방식</td><td>「등록된 기기」 원칙의 구현체. 시연 웹 v1.5가 기기 안에서만 동작하는 시연을 포함(서버 없음)</td><td><span class="chip part">시연</span></td></tr>
+<tr><td><b>패스키(WebAuthn)</b></td><td>비밀번호 대신 기기의 지문·얼굴로 확인 — 정부24·은행 앱 방식</td><td>「등록된 기기」 원칙의 구현체. 시연 웹 v1.5가 기기 안에서만 동작하는 체험을 포함(서버 없음) — 기본은 꺼져 있고 ⓘ 안내에서 켜면 첫 신청 때 등록, 위임 생성 때 재확인</td><td><span class="chip part">시연</span></td></tr>
 <tr><td><b>기기 내 음성 인식</b> (Web Speech <code>processLocally</code>)</td><td>브라우저가 음성을 기기 밖으로 보내지 않고 글자로 바꾸는 선택지 — 안드로이드 크롬 139+</td><td>지원 기기에서 자동 사용, 듣는 화면에 「기기 안에서 인식」 표시. 원칙 4(목소리는 서비스 서버에 남지 않는다)를 한 단계 더 밀어붙인다</td><td><span class="chip part">시연(지원 기기)</span></td></tr>
 <tr><td><b>브라우저 내장 AI</b> (Prompt API)</td><td>브라우저에 들어 있는 작은 언어모델 — 데스크톱 크롬 148 정식, 모바일·한국어는 예정</td><td>발화 해석을 기기 안에서 끝내 발화 자체가 서버로 가지 않게 하는 다음 단계. 지금은 규칙 기반 + 서버 언어모델, 지원이 오면 교체</td><td><span class="chip plan">설계</span></td></tr>
 <tr><td><b>범정부 AI 공통기반</b> (행정안전부, 2026 2단계)</td><td>중앙·지자체가 함께 쓰는 AI 모델·게이트웨이 — 챗봇에서 에이전트로, 기관 간 연결에 MCP 언급</td><td>운영 단계의 언어모델 계층을 지자체가 따로 사지 않고 공통기반의 AI 게이트웨이로 붙인다 — 도구 계층(MCP)은 그대로</td><td><span class="chip plan">설계</span></td></tr>
