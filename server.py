@@ -56,7 +56,7 @@ TOOLS = [
   "inputSchema": S({"properties": {"user": {"type": "string"}, "count": {"type": "integer"}},
                     "required": []})},
  {"name": "manage_mandate",
-  "description": "[확장 v0.2] 구독 위임장 관리 — create(범위 명시 동의 1회)/status/revoke. 완전 자동화의 이용자 통제 장치.",
+  "description": "[확장 v0.2] 사전 위임장(책이지 패스) 관리 — create(범위 명시 동의 1회)/status/revoke. 범위 안 신청은 확인 없이, 범위 밖은 확인으로 — 이용자 통제 장치.",
   "inputSchema": S({"properties": {"user": {"type": "string"},
                                    "op": {"type": "string", "enum": ["create", "status", "revoke"]},
                                    "pickup": {"type": "string"}},

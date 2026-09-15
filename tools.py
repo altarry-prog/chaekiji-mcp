@@ -9,7 +9,7 @@ import vault, policy
 from connectors import naru, alpas_stub as alpas
 import json as _json
 
-# 위임장(mandate) 저장소 — 운영: DB. 구독 동의 1회가 만드는 실행 권한의 실체.
+# 위임장(mandate) 저장소 — 운영: DB. 책이지 패스 등록(동의 1회)이 만드는 실행 권한의 실체.
 _MANDATES = {}
 _MSEQ = [0]
 
@@ -51,7 +51,7 @@ def request_service(user: str, isbn13: str, from_lib: str, pickup: str,
     if mandate_id:
         m = _MANDATES.get(mandate_id)
         if not m or not m["active"]:
-            raise PermissionError("유효한 위임(구독)이 없습니다")
+            raise PermissionError("유효한 위임(책이지 패스)이 없습니다")
         if m["user"] != user:
             raise PermissionError("위임의 이용자가 다릅니다")
         if m["scope"]["free_routes_only"] and route != "ill":
@@ -83,7 +83,7 @@ def suggest_items(user: str = None, count: int = 3):
     return {"items": rec[:count], "basis": "월간 추천(모의 픽스처)"}
 
 def manage_mandate(user: str, op: str, pickup: str = None):
-    """[확장 v0.2] 구독 위임장 관리 — 완전 자동화의 동의 장치.
+    """[확장 v0.2] 사전 위임장(책이지 패스) 관리 — 한 번 등록하면 범위 안 신청은 확인 없이 접수하게 하는 동의 장치.
     create: 범위가 명시된 위임 생성(이 1회가 유일한 사람 확인)
     status/revoke: 조회·즉시 해지."""
     vault.resolve(user)                                   # 토큰 검증
